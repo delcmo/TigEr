@@ -22,6 +22,8 @@ InputParameters validParams<TigErAdvection>()
 {
   InputParameters params = validParams<Kernel>();
 
+  // Speed of light constant:
+  params.addParam<Real>("c", 1., "speed of light value");
   // Angular:
   params.addParam<Real>("angular_direction", 1., "angular direction of the radiation: +1 or -1");
   
@@ -31,6 +33,8 @@ InputParameters validParams<TigErAdvection>()
 TigErAdvection::TigErAdvection(const std::string & name,
                        InputParameters parameters) :
   Kernel(name, parameters),
+    // Speed of light constant:
+    _c(getParam<Real>("c")),
     // Angular
     _omega(getParam<Real>("angular_direction"))
 {
@@ -41,7 +45,7 @@ TigErAdvection::TigErAdvection(const std::string & name,
 Real TigErAdvection::computeQpResidual()
 {
   // Return advection term
-  return _omega*_grad_u[_qp](0)*_test[_i][_qp];
+  return _c*_omega*_grad_u[_qp](0)*_test[_i][_qp];
 }
 
 Real TigErAdvection::computeQpJacobian()

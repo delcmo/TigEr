@@ -21,12 +21,17 @@ InputParameters validParams<TigErCrossSection>()
 {
   InputParameters params = validParams<Kernel>();
 
+  // Speed of light constant:
+  params.addParam<Real>("c", 1., "speed of light value");
+
   return params;
 }
 
 TigErCrossSection::TigErCrossSection(const std::string & name,
                        InputParameters parameters) :
   Kernel(name, parameters),
+    // Speed of light constant:
+    _c(getParam<Real>("c")),
     // Cross section:
     _sigma(getMaterialProperty<Real>("sigma"))
 {
@@ -37,7 +42,7 @@ TigErCrossSection::TigErCrossSection(const std::string & name,
 Real TigErCrossSection::computeQpResidual()
 {
   // Return value:
-  return _sigma[_qp]*_u[_qp]*_test[_i][_qp];
+  return _c*_sigma[_qp]*_u[_qp]*_test[_i][_qp];
 }
 
 Real TigErCrossSection::computeQpJacobian()

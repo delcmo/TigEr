@@ -38,6 +38,9 @@ protected:
 
 private:
 
+  // Speed of light constant
+  Real _c;
+
   // Angular
   Real _omega;
 };

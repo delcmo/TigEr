@@ -12,39 +12,37 @@
 /*            See COPYRIGHT for full restrictions               */
 /****************************************************************/
 
-#ifndef TIGERARTIFICIALVISC_H
-#define TIGERARTIFICIALVISC_H
+#ifndef STTRESIDUALAUX_H
+#define STTRESIDUALAUX_H
 
-#include "Kernel.h"
+#include "AuxKernel.h"
 
-// Forward Declarations
-class TigErArtificialVisc;
+class SttResidualAux;
 
 template<>
-InputParameters validParams<TigErArtificialVisc>();
+InputParameters validParams<SttResidualAux>();
 
-class TigErArtificialVisc : public Kernel
+class SttResidualAux : public AuxKernel
 {
 public:
 
-  TigErArtificialVisc(const std::string & name,
-             InputParameters parameters);
+  SttResidualAux(const std::string & name, InputParameters parameters);
 
 protected:
+  virtual Real computeValue();
 
-  virtual Real computeQpResidual();
+  // Coupled variables:
+  VariableValue & _radiation;
+  VariableGradient & _rad_grad;
 
-  virtual Real computeQpJacobian();
+  // Cross section (material property)
+  MaterialProperty<Real> & _sigma;
 
-  virtual Real computeQpOffDiagJacobian(unsigned int _jvar);
-    
-private:
-
-  // Speed of light constant
+  // Speed of light
   Real _c;
 
-  // Material property:
-  MaterialProperty<Real> & _kappa;
+  // Angular
+  Real _Omega;
 };
 
-#endif // TIGERARTIFICIALVISC_H
+#endif // STTRESIDUALAUX_H

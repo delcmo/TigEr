@@ -39,6 +39,9 @@ protected:
   virtual Real computeQpOffDiagJacobian(unsigned int _jvar);
     
 private:
+  // Speed of light constant:
+  Real _c;
+
   // Cross section (material property)
   MaterialProperty<Real> & _sigma;
 };

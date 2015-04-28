@@ -11,48 +11,45 @@
 /*                                                              */
 /*            See COPYRIGHT for full restrictions               */
 /****************************************************************/
-
-#include "TigErArtificialVisc.h"
 /**
-This function computes the artificial dissipative terms. It only works in 1-D
- */
+This function computes the fluid internal energy 'rhoe' from the conservative variables. It is dimension agnostic.
+**/
+#include "SttResidualAux.h"
+
 template<>
-InputParameters validParams<TigErArtificialVisc>()
+InputParameters validParams<SttResidualAux>()
 {
-  InputParameters params = validParams<Kernel>();
+  InputParameters params = validParams<AuxKernel>();
 
-  // Speed of light constant:
+  // Speed of light value
   params.addParam<Real>("c", 1., "speed of light value");
-
+  // Angular
+  params.addParam<Real>("angular_direction", 1., "angular direction of the radiation: +1 or -1");
+  // Coupled variables
+  params.addRequiredCoupledVar("radiation", "variable that computes the radiation");
+  
   return params;
 }
 
-TigErArtificialVisc::TigErArtificialVisc(const std::string & name,
-                       InputParameters parameters) :
-  Kernel(name, parameters),
-    // Speed of light constant:
+SttResidualAux::SttResidualAux(const std::string & name, InputParameters parameters) :
+    AuxKernel(name, parameters),
+    // Coupled variables:
+    _radiation(coupledValue("radiation")),
+    _rad_grad(coupledGradient("radiation")),
+    // Cross section:
+    _sigma(getMaterialProperty<Real>("sigma")),
+    // Speed of light:
     _c(getParam<Real>("c")),
-    // Material properties:
-    _kappa(getMaterialProperty<Real>("kappa"))
+    // Angular
+    _Omega(getParam<Real>("angular_direction"))
 {
   if (_mesh.dimension()!=1)
     mooseError("The current implementation of '" << this->name() << "' can only be used with 1-D mesh.");
 }
 
-Real TigErArtificialVisc::computeQpResidual()
+Real
+SttResidualAux::computeValue()
 {
-  // Compute the viscosity term
-
-  // Return the term
-  return _kappa[_qp]*_grad_u[_qp]*_grad_test[_i][_qp];
-}
-
-Real TigErArtificialVisc::computeQpJacobian()
-{
-  return 0.;
-}
-
-Real TigErArtificialVisc::computeQpOffDiagJacobian( unsigned int _jvar)
-{
-  return 0.*_jvar;
+  // Return stt value residual at quadrature point _qp:
+  return _c*( _Omega*_rad_grad[_qp](0)+_sigma[_qp]*_radiation[_qp] );
 }
