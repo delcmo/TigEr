@@ -40,11 +40,18 @@ protected:
     
 private:
 
+  // Elemental auxvariable storing the stt residual
+  VariableValue & _avg_stt_res;
+
   // Speed of light constant
   Real _c;
 
+  // Angular
+  Real _omega;
+
   // Material property:
   MaterialProperty<Real> & _kappa;
+  MaterialProperty<Real> & _sigma;
 };
 
 #endif // TIGERARTIFICIALVISC_H

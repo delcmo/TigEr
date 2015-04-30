@@ -3,6 +3,14 @@
 #include "AppFactory.h"
 #include "ModulesApp.h"
 
+// kernels
+#include "TigErAdvection.h"
+#include "TigErCrossSection.h"
+#include "TigErArtificialVisc.h"
+
+// auxkernels
+#include "SttResidualAux.h"
+
 template<>
 InputParameters validParams<TigerApp>()
 {
@@ -41,6 +49,13 @@ TigerApp::registerApps()
 void
 TigerApp::registerObjects(Factory & factory)
 {
+  // kernels
+  registerKernel(TigErAdvection);
+  registerKernel(TigErCrossSection);
+  registerKernel(TigErArtificialVisc);
+
+  // auxkernels
+  registerAux(SttResidualAux);
 }
 
 void
