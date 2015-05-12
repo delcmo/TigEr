@@ -12,22 +12,22 @@
 /*            See COPYRIGHT for full restrictions               */
 /****************************************************************/
 
-#ifndef TIGERARTIFICIALVISC_H
-#define TIGERARTIFICIALVISC_H
+#ifndef TIGERANTIDIFFUSIONTERM_H
+#define TIGERANTIDIFFUSIONTERM_H
 
 #include "Kernel.h"
 
 // Forward Declarations
-class TigErArtificialVisc;
+class TigErAntiDiffusionTerm;
 
 template<>
-InputParameters validParams<TigErArtificialVisc>();
+InputParameters validParams<TigErAntiDiffusionTerm>();
 
-class TigErArtificialVisc : public Kernel
+class TigErAntiDiffusionTerm : public Kernel
 {
 public:
 
-  TigErArtificialVisc(const std::string & name,
+  TigErAntiDiffusionTerm(const std::string & name,
              InputParameters parameters);
 
 protected:
@@ -43,16 +43,16 @@ protected:
 private:
 
   // Nodal values
+  VariableValue & _u_nodal_old;
   VariableValue & _u_nodal;
 
-  // Speed of light constant
+  // Constants
   Real _c;
-
-  // Angular
   Real _omega;
 
   // Material property:
+  MaterialProperty<Real> & _kappa;
   MaterialProperty<Real> & _sigma;
 };
 
-#endif // TIGERARTIFICIALVISC_H
+#endif // TIGERANTIDIFFUSIONTERM_H
