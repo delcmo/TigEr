@@ -7,6 +7,7 @@
 #include "TigErAdvection.h"
 #include "TigErCrossSection.h"
 #include "TigErArtificialVisc.h"
+#include "TigErMassMatrixDiffusion.h"
 
 // auxkernels
 #include "SttResidualAux.h"
@@ -53,6 +54,7 @@ TigerApp::registerObjects(Factory & factory)
   registerKernel(TigErAdvection);
   registerKernel(TigErCrossSection);
   registerKernel(TigErArtificialVisc);
+  registerKernel(TigErMassMatrixDiffusion);
 
   // auxkernels
   registerAux(SttResidualAux);

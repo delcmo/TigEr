@@ -12,27 +12,25 @@
 /*            See COPYRIGHT for full restrictions               */
 /****************************************************************/
 
-#ifndef TIGERARTIFICIALVISC_H
-#define TIGERARTIFICIALVISC_H
+#ifndef TIGERMASSMATRIXDIFFUSION_H
+#define TIGERMASSMATRIXDIFFUSION_H
 
 #include "Kernel.h"
 
 // Forward Declarations
-class TigErArtificialVisc;
+class TigErMassMatrixDiffusion;
 
 template<>
-InputParameters validParams<TigErArtificialVisc>();
+InputParameters validParams<TigErMassMatrixDiffusion>();
 
-class TigErArtificialVisc : public Kernel
+class TigErMassMatrixDiffusion : public Kernel
 {
 public:
 
-  TigErArtificialVisc(const std::string & name,
+  TigErMassMatrixDiffusion(const std::string & name,
              InputParameters parameters);
 
 protected:
-
-  virtual void computeResidual();
 
   virtual Real computeQpResidual();
 
@@ -47,13 +45,6 @@ private:
 
   // Speed of light constant
   Real _c;
-
-  // Angular
-  Real _omega;
-
-  // Material property:
-//  MaterialProperty<Real> & _kappa;
-  MaterialProperty<Real> & _sigma;
 };
 
-#endif // TIGERARTIFICIALVISC_H
+#endif // TIGERMASSMATRIXDIFFUSION_H
