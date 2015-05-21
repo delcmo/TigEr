@@ -78,6 +78,7 @@ Real TigErArtificialVisc::computeQpResidual()
     for (unsigned int jvar=0; jvar<phi.size(); jvar++)
       for (unsigned int qp=0; qp<_qrule->n_points(); qp++)
         Aij[ivar][jvar] += (_omega*phi_grad[jvar][qp](0)+_sigma[_qp]*phi[jvar][qp])*_c*_test[ivar][qp]*_coord[qp]*_JxW[qp];
+//        Aij[ivar][jvar] += (_omega*phi_grad[jvar][qp](0)+(_sigma[_qp]+1./(_c*_dt))*phi[jvar][qp])*_c*_test[ivar][qp]*_coord[qp]*_JxW[qp];
 
   // Compute the bilinear form b_k(\phi_j, \phi_i)
   std::vector<std::vector<Real> > b_k(phi.size(), std::vector<Real>(phi.size(), 0.));

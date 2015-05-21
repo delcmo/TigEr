@@ -31,7 +31,10 @@ TigErMassMatrixDiffusion::TigErMassMatrixDiffusion(const std::string & name,
                        InputParameters parameters) :
   Kernel(name, parameters),
     // get the nodal values
-    _u_nodal(_is_implicit ? _var.nodalValue() : _var.nodalValueOld()),
+    _u_nodal(_var.nodalValue()),
+    _u_nodal_old(_var.nodalValueOld()),
+    // Variable old value
+    _u_old(_var.slnOld()),
     // Speed of light constant:
     _c(getParam<Real>("c"))
 {
@@ -41,8 +44,14 @@ TigErMassMatrixDiffusion::TigErMassMatrixDiffusion(const std::string & name,
 
 Real TigErMassMatrixDiffusion::computeQpResidual()
 {
+  // Compute u-u_old
+  Real u_diff = _u[_qp]-_u_old[_qp];
+
+  // Compute (u-u_old)_i
+  Real u_diff_i = _u_nodal[_i]-_u_nodal_old[_i];
+
   // Return value
-  return -_c*(_u[_qp]-_u_nodal[_i])*_test[_i][_qp];
+  return -_c*(u_diff-u_diff_i)*_test[_i][_qp]/_dt;
 }
 
 Real TigErMassMatrixDiffusion::computeQpJacobian()

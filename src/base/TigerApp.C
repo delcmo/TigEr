@@ -12,6 +12,9 @@
 // auxkernels
 #include "SttResidualAux.h"
 
+// userobjects
+#include "GetExtremumValueFromNeighbors.h"
+
 template<>
 InputParameters validParams<TigerApp>()
 {
@@ -58,6 +61,9 @@ TigerApp::registerObjects(Factory & factory)
 
   // auxkernels
   registerAux(SttResidualAux);
+
+  // userobjects
+  registerUserObject(GetExtremumValueFromNeighbors);
 }
 
 void

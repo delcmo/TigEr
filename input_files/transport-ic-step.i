@@ -3,16 +3,23 @@
   dim = 1
   xmin = 0.
   xmax = 1
-  nx = 200
-  elem_type = EDGE2
+  nx = 100
+#  elem_type = EDGE3
 []
 
 [Functions]
-  [./ic]
+  [./ic1]
     axis = 0
     type                      = PiecewiseLinear
     x                         = '0    0.5   0.51  1.'
-    y                         = '1. 1.  0.  0.'
+    y                         = '0. 0.  0.  0.'
+  [../]
+  
+  [./ic2]
+    axis = 0
+    type                      = PiecewiseLinear
+    x                         = '0  0.3  0.4  0.6   0.8  0.95 1.'
+    y                         = '1. 3.   3.   2     2    0.   0.'
   [../]
 []
 
@@ -23,9 +30,9 @@
 
     [./InitialCondition]
       type = FunctionIC
-      function = ic
-      type = ConstantIC
-      value = 0.
+      function = ic2
+#      type = ConstantIC
+#      value = 0.
     [../]
   [../]
 []
@@ -53,8 +60,25 @@
 #   [./lump_mass_matrix]
 #    type = TigErMassMatrixDiffusion
 #    variable = u
-#    implicit = false
+#    implicit = true
 #   [./]
+[]
+
+[AuxVariables]
+  [./u_max_node]
+    order = FIRST
+    family = LAGRANGE
+  [../]
+[]
+
+[UserObjects]
+# active = ''
+  [./u_max_uo]
+    type = GetExtremumValueFromNeighbors
+    variable = u
+    variable_out = u_max_node
+    execute_on = 'timestep_begin'
+  [../]
 []
 
 [Materials]
@@ -86,15 +110,24 @@
  [../]
 []
 
+#[Postprocessors]
+#  [./u_max_uo]
+#   type = GetExtremumValueFromNeighbors
+#    variable = u
+#    variable_out = u_max_node
+#    execute_on = 'timestep_begin'
+#  [../]
+#[]
+
 [Executioner]
   type = Transient
-  scheme = 'explicit-euler'
+  scheme = 'rk-2'
   solve_type = 'LINEAR'
   petsc_options = '-snes_converged_reason'
 
   start_time = 0.0
   end_time = 0.3
-#  num_steps = 1000 # 5000
+  num_steps = 10 # 5000
   dt = 0.0004
 
  [./Quadrature]

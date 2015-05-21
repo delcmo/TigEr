@@ -41,7 +41,11 @@ protected:
 private:
 
   // Nodal values
-  VariableValue & _u_nodal;
+  VariableValue & _u_nodal;  
+  VariableValue & _u_nodal_old;
+
+  // Variable old value
+  VariableValue & _u_old;
 
   // Speed of light constant
   Real _c;
