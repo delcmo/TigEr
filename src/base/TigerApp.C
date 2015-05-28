@@ -4,16 +4,25 @@
 #include "ModulesApp.h"
 
 // kernels
+#include "LumpedTimeDerivative.h"
 #include "TigErAdvection.h"
 #include "TigErCrossSection.h"
 #include "TigErArtificialVisc.h"
 #include "TigErMassMatrixDiffusion.h"
+#include "TigErAntiDiffusionTerm.h"
 
 // auxkernels
 #include "SttResidualAux.h"
+#include "Entropy.h"
+
+// materials
+#include "EntropyViscosityCoefficient.h"
 
 // userobjects
 #include "GetExtremumValueFromNeighbors.h"
+
+// postprocessors
+#include "InfiniteNormFromAverageValue.h"
 
 template<>
 InputParameters validParams<TigerApp>()
@@ -54,16 +63,25 @@ void
 TigerApp::registerObjects(Factory & factory)
 {
   // kernels
+  registerKernel(LumpedTimeDerivative);
   registerKernel(TigErAdvection);
   registerKernel(TigErCrossSection);
   registerKernel(TigErArtificialVisc);
   registerKernel(TigErMassMatrixDiffusion);
+  registerKernel(TigErAntiDiffusionTerm);
 
   // auxkernels
   registerAux(SttResidualAux);
+  registerAux(Entropy);
+
+  // materials
+  registerMaterial(EntropyViscosityCoefficient);
 
   // userobjects
   registerUserObject(GetExtremumValueFromNeighbors);
+
+  // postprocessors
+  registerPostprocessor(InfiniteNormFromAverageValue);
 }
 
 void

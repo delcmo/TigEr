@@ -12,51 +12,33 @@
 /*            See COPYRIGHT for full restrictions               */
 /****************************************************************/
 
-#ifndef TIGERANTIDIFFUSIONTERM_H
-#define TIGERANTIDIFFUSIONTERM_H
+#ifndef LUMPEDTIMEDERIVATIVE_H
+#define LUMPEDTIMEDERIVATIVE_H
 
-#include "Kernel.h"
+#include "TimeKernel.h"
+#include "MooseVariableInterface.h"
 
-// Forward Declarations
-class TigErAntiDiffusionTerm;
+// Forward Declaration
+class LumpedTimeDerivative;
 
 template<>
-InputParameters validParams<TigErAntiDiffusionTerm>();
+InputParameters validParams<LumpedTimeDerivative>();
 
-class TigErAntiDiffusionTerm : public Kernel
+class LumpedTimeDerivative : public TimeKernel
 {
 public:
-
-  TigErAntiDiffusionTerm(const std::string & name,
-             InputParameters parameters);
-
-protected:
+  LumpedTimeDerivative(const std::string & name, InputParameters parameters);
 
   virtual void computeResidual();
+  virtual void computeJacobian();
 
+protected:
   virtual Real computeQpResidual();
-
   virtual Real computeQpJacobian();
 
-  virtual Real computeQpOffDiagJacobian(unsigned int _jvar);
-    
-private:
-
   // Nodal values
-  VariableValue & _u_nodal_old;
   VariableValue & _u_nodal;
-
-  // Coupled aux variables
-  VariableValue & _U_plus;
-  VariableValue & _U_minus;
-
-  // Constants
-  Real _c;
-  Real _omega;
-
-  // Material property:
-  MaterialProperty<Real> & _kappa;
-  MaterialProperty<Real> & _sigma;
+  VariableValue & _u_old_nodal;
 };
 
-#endif // TIGERANTIDIFFUSIONTERM_H
+#endif //LUMPEDTIMEDERIVATIVE_H

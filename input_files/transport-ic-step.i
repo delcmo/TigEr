@@ -30,18 +30,15 @@
 
     [./InitialCondition]
       type = FunctionIC
-      function = ic2
-#      type = ConstantIC
-#      value = 0.
+      function = ic1
     [../]
   [../]
 []
 
 [Kernels]
   [./ie]
-    type = TimeDerivative
+    type = LumpedTimeDerivative
     variable = u
-    lumping = true
     implicit = true
   [../]
 
@@ -56,28 +53,81 @@
     variable = u
     implicit = false
   [../]
-
-#   [./lump_mass_matrix]
-#    type = TigErMassMatrixDiffusion
+  
+#  [./antidiffusionterm]
+#    type = TigErAntiDiffusionTerm
 #    variable = u
-#    implicit = true
-#   [./]
+#    max_nodal_values = u_max_node
+#    min_nodal_values = u_min_node
+#    implicit = false
+#  [../]
 []
 
 [AuxVariables]
+  [./entropy]
+    order = FIRST
+    family = LAGRANGE
+  [../]
+
   [./u_max_node]
     order = FIRST
     family = LAGRANGE
   [../]
+  
+  [./u_min_node]
+    order = FIRST
+    family = LAGRANGE
+  [../]
+  
+  [./kappa_aux]
+    order = CONSTANT
+    family = MONOMIAL
+  [../]
+[]
+
+[AuxKernels]
+  [./EntropyAK]
+    type = Entropy
+    variable = entropy
+    radiation_flux = u
+  [../]
+
+  [./kappaAK]
+    type = MaterialRealAux
+    variable = kappa_aux
+    property = entropy_viscosity_coefficient
+  [../]
 []
 
 [UserObjects]
-# active = ''
   [./u_max_uo]
     type = GetExtremumValueFromNeighbors
     variable = u
     variable_out = u_max_node
-    execute_on = 'timestep_begin'
+    execute_on = 'timestep_end'
+  [../]
+  
+  [./u_min_uo]
+    type = GetExtremumValueFromNeighbors
+    variable = u
+    variable_out = u_min_node
+    compute_maximum = false
+    execute_on = 'timestep_end'
+  [../]
+[]
+
+[Postprocessors]
+  [./average_entropy]
+    type = ElementAverageValue
+    variable = entropy
+    execute_on = 'timestep_end'
+  [../]
+  
+  [./infinite_norm]
+    type = InfiniteNormFromAverageValue
+    variable = entropy
+    name_pps_average = average_entropy
+    execute_on = 'timestep_end'
   [../]
 []
 
@@ -88,11 +138,23 @@
     block = 0
     prop_values = 0.
   [../]
+  
+  [./kappaMat]
+    type = GenericConstantMaterial
+    prop_names = 'entropy_viscosity_coefficient'
+    block = 0
+    prop_values = 0.
+  [../]
+  
+  [./EntropyViscosityCoefficient]
+    type = EntropyViscosityCoefficient
+    radiation_flux = u
+    name_pps_for_normalization = infinite_norm
+    block = 0    
+  [../]
 []
 
 [BCs]
-  active = 'left right'
-
   [./left]
     type = DirichletBC
     variable = u
@@ -110,30 +172,21 @@
  [../]
 []
 
-#[Postprocessors]
-#  [./u_max_uo]
-#   type = GetExtremumValueFromNeighbors
-#    variable = u
-#    variable_out = u_max_node
-#    execute_on = 'timestep_begin'
-#  [../]
-#[]
-
 [Executioner]
   type = Transient
-  scheme = 'rk-2'
+  scheme = 'explicit-euler'
   solve_type = 'LINEAR'
   petsc_options = '-snes_converged_reason'
 
   start_time = 0.0
   end_time = 0.3
-  num_steps = 10 # 5000
+  num_steps = 2 # 5000
   dt = 0.0004
 
- [./Quadrature]
-  type = GAUSS
-  order = SECOND
- [../]
+  [./Quadrature]
+    type = GAUSS
+    order = SECOND
+  [../]
 []
 
 [Outputs]

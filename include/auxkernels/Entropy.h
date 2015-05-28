@@ -12,51 +12,27 @@
 /*            See COPYRIGHT for full restrictions               */
 /****************************************************************/
 
-#ifndef TIGERANTIDIFFUSIONTERM_H
-#define TIGERANTIDIFFUSIONTERM_H
+#ifndef ENTROPY_H
+#define ENTROPY_H
 
-#include "Kernel.h"
+#include "AuxKernel.h"
 
-// Forward Declarations
-class TigErAntiDiffusionTerm;
+class Entropy;
 
 template<>
-InputParameters validParams<TigErAntiDiffusionTerm>();
+InputParameters validParams<Entropy>();
 
-class TigErAntiDiffusionTerm : public Kernel
+class Entropy : public AuxKernel
 {
 public:
 
-  TigErAntiDiffusionTerm(const std::string & name,
-             InputParameters parameters);
+  Entropy(const std::string & name, InputParameters parameters);
 
 protected:
+  virtual Real computeValue();
 
-  virtual void computeResidual();
-
-  virtual Real computeQpResidual();
-
-  virtual Real computeQpJacobian();
-
-  virtual Real computeQpOffDiagJacobian(unsigned int _jvar);
-    
-private:
-
-  // Nodal values
-  VariableValue & _u_nodal_old;
-  VariableValue & _u_nodal;
-
-  // Coupled aux variables
-  VariableValue & _U_plus;
-  VariableValue & _U_minus;
-
-  // Constants
-  Real _c;
-  Real _omega;
-
-  // Material property:
-  MaterialProperty<Real> & _kappa;
-  MaterialProperty<Real> & _sigma;
+  // Coupled variables:
+  VariableValue & _radiation;
 };
 
-#endif // TIGERANTIDIFFUSIONTERM_H
+#endif // ENTROPY_H

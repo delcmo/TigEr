@@ -11,52 +11,33 @@
 /*                                                              */
 /*            See COPYRIGHT for full restrictions               */
 /****************************************************************/
-
-#ifndef TIGERANTIDIFFUSIONTERM_H
-#define TIGERANTIDIFFUSIONTERM_H
-
-#include "Kernel.h"
-
-// Forward Declarations
-class TigErAntiDiffusionTerm;
+/**
+This function computes the fluid internal energy 'rhoe' from the conservative variables. It is dimension agnostic.
+**/
+#include "Entropy.h"
 
 template<>
-InputParameters validParams<TigErAntiDiffusionTerm>();
-
-class TigErAntiDiffusionTerm : public Kernel
+InputParameters validParams<Entropy>()
 {
-public:
+  InputParameters params = validParams<AuxKernel>();
 
-  TigErAntiDiffusionTerm(const std::string & name,
-             InputParameters parameters);
+  // Coupled variable
+  params.addRequiredCoupledVar("radiation_flux", "variable that computes the radiation");
+  
+  return params;
+}
 
-protected:
+Entropy::Entropy(const std::string & name, InputParameters parameters) :
+    AuxKernel(name, parameters),
+    // Coupled variables:
+    _radiation(coupledValue("radiation_flux"))
+{
+  mooseAssert(_mesh.dimension()!=1, "The current implementation of '" << this->name() << "' can only be used with 1-D mesh.");
+}
 
-  virtual void computeResidual();
-
-  virtual Real computeQpResidual();
-
-  virtual Real computeQpJacobian();
-
-  virtual Real computeQpOffDiagJacobian(unsigned int _jvar);
-    
-private:
-
-  // Nodal values
-  VariableValue & _u_nodal_old;
-  VariableValue & _u_nodal;
-
-  // Coupled aux variables
-  VariableValue & _U_plus;
-  VariableValue & _U_minus;
-
-  // Constants
-  Real _c;
-  Real _omega;
-
-  // Material property:
-  MaterialProperty<Real> & _kappa;
-  MaterialProperty<Real> & _sigma;
-};
-
-#endif // TIGERANTIDIFFUSIONTERM_H
+Real
+Entropy::computeValue()
+{
+  // Return the value of the entropy:
+  return 0.5*_radiation[_qp]*_radiation[_qp];
+}

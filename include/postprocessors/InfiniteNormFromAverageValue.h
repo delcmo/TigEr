@@ -12,51 +12,40 @@
 /*            See COPYRIGHT for full restrictions               */
 /****************************************************************/
 
-#ifndef TIGERANTIDIFFUSIONTERM_H
-#define TIGERANTIDIFFUSIONTERM_H
+#ifndef INFINITENORMFROMAVERAGEVALUE_H
+#define INFINITENORMFROMAVERAGEVALUE_H
 
-#include "Kernel.h"
+#include "ElementPostprocessor.h"
 
-// Forward Declarations
-class TigErAntiDiffusionTerm;
+//Forward Declarations
+class InfiniteNormFromAverageValue;
 
 template<>
-InputParameters validParams<TigErAntiDiffusionTerm>();
+InputParameters validParams<InfiniteNormFromAverageValue>();
 
-class TigErAntiDiffusionTerm : public Kernel
+class InfiniteNormFromAverageValue : public ElementPostprocessor
 {
 public:
+  InfiniteNormFromAverageValue(const std::string & name, InputParameters parameters);
 
-  TigErAntiDiffusionTerm(const std::string & name,
-             InputParameters parameters);
+  virtual void initialize();
+  virtual void execute();
+  virtual void finalize();
+  virtual Real getValue();
+  virtual void threadJoin(const UserObject & y);
 
 protected:
+  // Variable this pps is acting on:
+  VariableValue & _u;
 
-  virtual void computeResidual();
+  // Name of the pps
+  std::string _pps_name;
 
-  virtual Real computeQpResidual();
+  // Value of the pps
+  Real _pps_value;
 
-  virtual Real computeQpJacobian();
-
-  virtual Real computeQpOffDiagJacobian(unsigned int _jvar);
-    
-private:
-
-  // Nodal values
-  VariableValue & _u_nodal_old;
-  VariableValue & _u_nodal;
-
-  // Coupled aux variables
-  VariableValue & _U_plus;
-  VariableValue & _U_minus;
-
-  // Constants
-  Real _c;
-  Real _omega;
-
-  // Material property:
-  MaterialProperty<Real> & _kappa;
-  MaterialProperty<Real> & _sigma;
+  // Value storing the maximum value:
+  Real _value;
 };
 
-#endif // TIGERANTIDIFFUSIONTERM_H
+#endif // INFINITENORMFROMAVERAGEVALUE_H

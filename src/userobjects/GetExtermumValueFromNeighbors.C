@@ -79,21 +79,13 @@ GetExtremumValueFromNeighbors::execute()
   dof_id_type dof_out_i = _current_elem->get_node(0)->dof_number(_aux.number(), _var_out.number(), 0);
   sln.set(dof_out_i, extrem_value);
 
-  /// Compute extremum value for node 'i+1' (1) of '_current_element'
-  // Determine neighbor element for node 'i' (right)
-  const Elem * nghb_elem_to_node_ip1 = _current_elem->neighbor(1) == NULL ? _current_elem : _current_elem->neighbor(1);
-
-  // Get the nodal values 'i+1' and 'i+2' belonging to 'nghb_elem_to_node_i'
-  Number nghb_nodal_val_ip1 = _var.getNodalValue(*nghb_elem_to_node_ip1->get_node(0));
-  Number nghb_nodal_val_ip2 = _var.getNodalValue(*nghb_elem_to_node_ip1->get_node(1));
-
-  // Determine extremum value for node 'i+1' of '_current_elem'
-  extrem_value_nghb = _comp_max ? std::max(nghb_nodal_val_ip1, nghb_nodal_val_ip2) : std::min(nghb_nodal_val_ip1, nghb_nodal_val_ip2);
-  extrem_value = _comp_max ? std::max(extrem_value_nghb, extrem_value_elem) : std::min(extrem_value_nghb, extrem_value_elem);
-
-  // Store the computed extremum value 'extrem_value' in the variable called 'variable_out'
-  dof_id_type dof_out_ip1 = _current_elem->get_node(1)->dof_number(_aux.number(), _var_out.number(), 0);
-  sln.set(dof_out_ip1, extrem_value);
+  /// Compute extremum value for node 'i+1' (1) of '_current_element' only if it is last element of the mesh:
+  if (_current_elem->neighbor(1) == NULL)
+  {
+    // Store the computed extremum value 'extrem_value' in the variable called 'variable_out'
+    dof_id_type dof_out_ip1 = _current_elem->get_node(1)->dof_number(_aux.number(), _var_out.number(), 0);
+    sln.set(dof_out_ip1, extrem_value_elem);
+  }
 }
 
 void
