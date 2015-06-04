@@ -68,6 +68,7 @@ TigErArtificialVisc::computeResidual()
 
 Real TigErArtificialVisc::computeQpResidual()
 {
+  std::cout<<_stage_fct<<std::endl;
   // Get the nodal values and the shape functions
   VariablePhiValue phi = _var.phi();
   VariablePhiGradient phi_grad = _var.gradPhi();

@@ -3,6 +3,9 @@
 #include "AppFactory.h"
 #include "ModulesApp.h"
 
+// time integrators
+#include "ExplicitEulerFCT.h"
+
 // kernels
 #include "LumpedTimeDerivative.h"
 #include "TigErAdvection.h"
@@ -62,6 +65,9 @@ TigerApp::registerApps()
 void
 TigerApp::registerObjects(Factory & factory)
 {
+  // time integrator
+  registerTimeIntegrator(ExplicitEulerFCT);
+
   // kernels
   registerKernel(LumpedTimeDerivative);
   registerKernel(TigErAdvection);

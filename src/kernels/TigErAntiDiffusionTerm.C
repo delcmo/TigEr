@@ -103,21 +103,21 @@ Real TigErAntiDiffusionTerm::computeQpResidual()
     }
   }
 
-  std::cout<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<std::endl;
-  std::cout<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<std::endl;
-  std::cout<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<std::endl;
-  std::cout<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<std::endl;
-  for (unsigned int ivar=0; ivar<phi.size(); ivar++)
-    for (unsigned int jvar=0; jvar<phi.size(); jvar++)
-      std::cout<<"Aij["<<ivar<<"]["<<jvar<<"]="<<Aij[ivar][jvar]<<std::endl;
-  std::cout<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<std::endl;
-  for (unsigned int ivar=0; ivar<phi.size(); ivar++)
-    for (unsigned int jvar=0; jvar<phi.size(); jvar++)
-      std::cout<<"Mij["<<ivar<<"]["<<jvar<<"]="<<Mij[ivar][jvar]<<std::endl;
-  std::cout<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<std::endl;
-  for (unsigned int ivar=0; ivar<phi.size(); ivar++)
-    for (unsigned int jvar=0; jvar<phi.size(); jvar++)
-      std::cout<<"Dij["<<ivar<<"]["<<jvar<<"]="<<Dij[ivar][jvar]<<std::endl;
+//  std::cout<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<std::endl;
+//  std::cout<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<std::endl;
+//  std::cout<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<std::endl;
+//  std::cout<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<std::endl;
+//  for (unsigned int ivar=0; ivar<phi.size(); ivar++)
+//    for (unsigned int jvar=0; jvar<phi.size(); jvar++)
+//      std::cout<<"Aij["<<ivar<<"]["<<jvar<<"]="<<Aij[ivar][jvar]<<std::endl;
+//  std::cout<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<std::endl;
+//  for (unsigned int ivar=0; ivar<phi.size(); ivar++)
+//    for (unsigned int jvar=0; jvar<phi.size(); jvar++)
+//      std::cout<<"Mij["<<ivar<<"]["<<jvar<<"]="<<Mij[ivar][jvar]<<std::endl;
+//  std::cout<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<std::endl;
+//  for (unsigned int ivar=0; ivar<phi.size(); ivar++)
+//    for (unsigned int jvar=0; jvar<phi.size(); jvar++)
+//      std::cout<<"Dij["<<ivar<<"]["<<jvar<<"]="<<Dij[ivar][jvar]<<std::endl;
 
   // Compute the low-order viscosity coefficient
   Real sum_b_k(0.), max_Aij(0.);
@@ -127,18 +127,18 @@ Real TigErAntiDiffusionTerm::computeQpResidual()
         max_Aij = std::max(max_Aij, std::max(0., Aij[ivar][jvar])/(-b_k[ivar][jvar]));
 
   Real low_visc = max_Aij;
-  std::cout<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<std::endl;
-  std::cout<<"low_visc="<<low_visc<<std::endl;
+//  std::cout<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<std::endl;
+//  std::cout<<"low_visc="<<low_visc<<std::endl;
 
   if (low_visc<0)
     mooseError("The low-order viscosity coefficient computed in '"<<this->name()<<"' is locally negative.");
 
-  std::cout<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<std::endl;
-  for (unsigned int ivar=0; ivar<phi.size(); ivar++)
-    std::cout<<"Uminus["<<ivar<<"]="<<_U_minus[ivar]<<std::endl;
-  std::cout<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<std::endl;
-  for (unsigned int ivar=0; ivar<phi.size(); ivar++)
-    std::cout<<"Uplus["<<ivar<<"]="<<_U_plus[ivar]<<std::endl;
+//  std::cout<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<std::endl;
+//  for (unsigned int ivar=0; ivar<phi.size(); ivar++)
+//    std::cout<<"Uminus["<<ivar<<"]="<<_U_minus[ivar]<<std::endl;
+//  std::cout<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<std::endl;
+//  for (unsigned int ivar=0; ivar<phi.size(); ivar++)
+//    std::cout<<"Uplus["<<ivar<<"]="<<_U_plus[ivar]<<std::endl;
 
   // Compute the upper and lower bounds for the fluxes at node i: W_plus and W_minus
   std::vector<Real> U_minus(phi.size(), 0.);
@@ -149,12 +149,12 @@ Real TigErAntiDiffusionTerm::computeQpResidual()
     U_plus[ivar] = std::max(_U_plus[ivar], _u_nodal_old[ivar]);
   }
 
-  std::cout<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<std::endl;
-  for (unsigned int ivar=0; ivar<phi.size(); ivar++)
-    std::cout<<"Uminus["<<ivar<<"]="<<U_minus[ivar]<<std::endl;
-  std::cout<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<std::endl;
-  for (unsigned int ivar=0; ivar<phi.size(); ivar++)
-    std::cout<<"Uplus["<<ivar<<"]="<<U_plus[ivar]<<std::endl;
+//  std::cout<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<std::endl;
+//  for (unsigned int ivar=0; ivar<phi.size(); ivar++)
+//    std::cout<<"Uminus["<<ivar<<"]="<<U_minus[ivar]<<std::endl;
+//  std::cout<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<std::endl;
+//  for (unsigned int ivar=0; ivar<phi.size(); ivar++)
+//    std::cout<<"Uplus["<<ivar<<"]="<<U_plus[ivar]<<std::endl;
 
   std::vector<Real> W_plus(phi.size(), 0.);
   std::vector<Real> W_minus(phi.size(), 0.);
@@ -169,12 +169,12 @@ Real TigErAntiDiffusionTerm::computeQpResidual()
     W_plus[ivar] = U_plus[ivar]*W + _dt/Mij[ivar][ivar]*B_i[ivar];
   }
 
-  std::cout<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<std::endl;
-  for (unsigned int ivar=0; ivar<phi.size(); ivar++)
-    std::cout<<"Wminus["<<ivar<<"]="<<W_minus[ivar]<<std::endl;
-  std::cout<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<std::endl;
-  for (unsigned int ivar=0; ivar<phi.size(); ivar++)
-    std::cout<<"Wplus["<<ivar<<"]="<<W_plus[ivar]<<std::endl;
+//  std::cout<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<std::endl;
+//  for (unsigned int ivar=0; ivar<phi.size(); ivar++)
+//    std::cout<<"Wminus["<<ivar<<"]="<<W_minus[ivar]<<std::endl;
+//  std::cout<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<std::endl;
+//  for (unsigned int ivar=0; ivar<phi.size(); ivar++)
+//    std::cout<<"Wplus["<<ivar<<"]="<<W_plus[ivar]<<std::endl;
 
   // Compute the antidiffusion term:
   std::vector<std::vector<Real> > Fij(phi.size(), std::vector<Real>(phi.size(), 0.));
@@ -185,6 +185,10 @@ Real TigErAntiDiffusionTerm::computeQpResidual()
       Fij[ivar][jvar] *= _u_nodal[jvar]-_u_nodal_old[jvar]-_u_nodal[ivar]+_u_nodal_old[ivar];
       Fij[ivar][jvar] += Dij[ivar][jvar]*(low_visc-_kappa[_qp])*(_u_nodal_old[jvar]-_u_nodal_old[ivar]);
     }
+//  std::cout<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<std::endl;  
+//  for (unsigned int ivar=0; ivar<phi.size(); ivar++)
+//    for (unsigned int jvar=0; jvar<phi.size(); jvar++)
+//      std::cout<<"Fij["<<ivar<<"]["<<jvar<<"]="<<Fij[ivar][jvar]<<std::endl;
 
   // Compute the sums of positive and negative fluxes: P_plus and P_minus.
   std::vector<Real> P_plus(phi.size(), 0.);

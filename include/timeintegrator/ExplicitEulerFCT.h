@@ -12,48 +12,32 @@
 /*            See COPYRIGHT for full restrictions               */
 /****************************************************************/
 
-#ifndef TIGERARTIFICIALVISC_H
-#define TIGERARTIFICIALVISC_H
+#ifndef EXPLICITEULERFCT_H
+#define EXPLICITEULERFCT_H
 
-#include "Kernel.h"
+#include "TimeIntegrator.h"
 
-// Forward Declarations
-class TigErArtificialVisc;
+class ExplicitEulerFCT;
 
 template<>
-InputParameters validParams<TigErArtificialVisc>();
+InputParameters validParams<ExplicitEulerFCT>();
 
-class TigErArtificialVisc :
-  public Kernel
+/**
+ * Explicit Euler time integrator with Flux Corrected Transport (FCT)
+ */
+class ExplicitEulerFCT : public TimeIntegrator
 {
 public:
+  ExplicitEulerFCT(const std::string & name, InputParameters parameters);
+  virtual ~ExplicitEulerFCT();
 
-  TigErArtificialVisc(const std::string & name,
-             InputParameters parameters);
+  virtual int order() { return 1; }
+  virtual void preSolve();  
+  virtual void computeTimeDerivatives();
+  virtual void solve();  
+  virtual void postStep(NumericVector<Number> & residual);
 
 protected:
-
-  virtual void computeResidual();
-
-  virtual Real computeQpResidual();
-
-  virtual Real computeQpJacobian();
-
-  virtual Real computeQpOffDiagJacobian(unsigned int _jvar);
-    
-private:
-
-  // Nodal values
-  VariableValue & _u_nodal;
-
-  // Speed of light constant
-  Real _c;
-
-  // Angular
-  Real _omega;
-
-  // Material property:
-  MaterialProperty<Real> & _sigma;
 };
 
-#endif // TIGERARTIFICIALVISC_H
+#endif /* EXPLICITEULERFCT_H */

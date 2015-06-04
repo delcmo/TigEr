@@ -3,8 +3,7 @@
   dim = 1
   xmin = 0.
   xmax = 1
-  nx = 100
-#  elem_type = EDGE3
+  nx = 10
 []
 
 [Functions]
@@ -54,13 +53,13 @@
     implicit = false
   [../]
   
-#  [./antidiffusionterm]
-#    type = TigErAntiDiffusionTerm
-#    variable = u
-#    max_nodal_values = u_max_node
-#    min_nodal_values = u_min_node
-#    implicit = false
-#  [../]
+  [./antidiffusionterm]
+    type = TigErAntiDiffusionTerm
+    variable = u
+    max_nodal_values = u_max_node
+    min_nodal_values = u_min_node
+    implicit = false
+  [../]
 []
 
 [AuxVariables]
@@ -139,12 +138,12 @@
     prop_values = 0.
   [../]
   
-  [./kappaMat]
-    type = GenericConstantMaterial
-    prop_names = 'entropy_viscosity_coefficient'
-    block = 0
-    prop_values = 0.
-  [../]
+#  [./kappaMat]
+#    type = GenericConstantMaterial
+#    prop_names = 'entropy_viscosity_coefficient'
+#    block = 0
+#    prop_values = 0.
+#  [../]
   
   [./EntropyViscosityCoefficient]
     type = EntropyViscosityCoefficient
@@ -174,13 +173,13 @@
 
 [Executioner]
   type = Transient
-  scheme = 'explicit-euler'
+  scheme = 'explicit-euler-fct'
   solve_type = 'LINEAR'
   petsc_options = '-snes_converged_reason'
 
   start_time = 0.0
   end_time = 0.3
-  num_steps = 2 # 5000
+  num_steps = 1 # 5000
   dt = 0.0004
 
   [./Quadrature]
