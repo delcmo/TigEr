@@ -55,8 +55,8 @@ private:
   Real _omega;
 
   // Material property:
-  MaterialProperty<Real> & _kappa;
-  MaterialProperty<Real> & _sigma;
+  const MaterialProperty<Real> & _kappa;
+  const MaterialProperty<Real> & _sigma;
 };
 
 #endif // TIGERANTIDIFFUSIONTERM_H

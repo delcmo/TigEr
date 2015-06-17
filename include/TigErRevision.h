@@ -3,6 +3,6 @@
 #ifndef TIGER_REVISION_H
 #define TIGER_REVISION_H
 
-#define TIGER_REVISION "git commit 2ecade1 on 2015-05-12"
+#define TIGER_REVISION "git commit 3a08263 on 2015-06-04"
 
 #endif // TIGER_REVISION_H

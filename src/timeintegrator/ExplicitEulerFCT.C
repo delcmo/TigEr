@@ -25,7 +25,8 @@ InputParameters validParams<ExplicitEulerFCT>()
 }
 
 ExplicitEulerFCT::ExplicitEulerFCT(const std::string & name, InputParameters parameters) :
-    TimeIntegrator(name, parameters)
+    TimeIntegrator(name, parameters),
+    _stage_fct(0)
 {
 }
 

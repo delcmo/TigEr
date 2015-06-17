@@ -43,7 +43,7 @@ private:
   Real _c;
 
   // Cross section (material property)
-  MaterialProperty<Real> & _sigma;
+  const MaterialProperty<Real> & _sigma;
 };
 
 #endif // TIGERCROSSSECTION_H

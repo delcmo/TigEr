@@ -36,7 +36,7 @@ protected:
   VariableGradient & _rad_grad;
 
   // Cross section (material property)
-  MaterialProperty<Real> & _sigma;
+  const MaterialProperty<Real> & _sigma;
 
   // Speed of light
   Real _c;

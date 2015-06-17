@@ -53,7 +53,7 @@ private:
   Real _omega;
 
   // Material property:
-  MaterialProperty<Real> & _sigma;
+  const MaterialProperty<Real> & _sigma;
 };
 
 #endif // TIGERARTIFICIALVISC_H

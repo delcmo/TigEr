@@ -38,6 +38,7 @@ public:
   virtual void postStep(NumericVector<Number> & residual);
 
 protected:
+  int _stage_fct;
 };
 
 #endif /* EXPLICITEULERFCT_H */
